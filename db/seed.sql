@@ -13,6 +13,17 @@ VALUES
     ('Rose', 'King', 5, NULL),
     ('Todd', 'Hunold', 5, 1);
 
+    INSERT INTO department (name)
+VALUES
+    ('Marketing'),
+    ('Human Resources'),
+    ('Operations'),
+    ('Finance'),
+    ('Sales'),
+    ('Technical Support'),
+    ('Management'),
+    ('Customer Service');
+
 
 
 
