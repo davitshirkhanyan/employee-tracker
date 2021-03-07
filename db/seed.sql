@@ -24,6 +24,18 @@ VALUES
     ('Management'),
     ('Customer Service');
 
+    INSERT INTO role (title, salary, department_id)
+VALUES
+    ('Marketing Manager', 100000, 1),
+    ('Software Engineer', 125000, 6),
+    ('Accountant', 125000, 4),
+    ('Merchandiser', 97000, 5),
+    ('Superviser', 130000, 2),
+    ('Operations Manager', 110000, 3),
+    ('Senior Risk Management Specialist', 120000, 7),
+    ('Customer Service Representative', 70000, 8);
+
+
 
 
 
