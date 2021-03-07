@@ -1,3 +1,7 @@
+DROP DATABASE IF EXISTS employeeDB;
+CREATE DATABASE employeeDB;
+USE employeeDB;
+
 CREATE TABLE employee (
     id INTEGER auto_increment PRIMARY KEY NOT NULL,
     first_name VARCHAR(50),
