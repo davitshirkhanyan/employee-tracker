@@ -5,3 +5,8 @@ CREATE TABLE employee (
     role_id INTEGER,
     manager_id INTEGER NULL
 );
+
+CREATE TABLE department (
+    id INTEGER auto_increment PRIMARY KEY NOT NULL,
+    name VARCHAR(50) NOT NULL
+);
