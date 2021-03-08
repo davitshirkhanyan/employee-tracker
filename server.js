@@ -337,6 +337,39 @@ async function updateManager() {
     });
 };
 
+// Update the selected employee
+async function updateEmployee() {
+    let employees = await db.query('SELECT id, CONCAT(first_name, " ", last_name) AS name FROM employee');
+    employees.push(
+        {
+            id: null, 
+            name: "Cancel"
+        });
+    let roles = await db.query('SELECT id, title FROM role');
 
+    inquirer.prompt([
+        {
+            name: "employeeName",
+            type: "list",
+            message: "Which employee do you want for?",
+            choices: employees.map(obj => obj.name)
+        },
+        {
+            name: "newRole",
+            type: "list",
+            message: "Change the role to:",
+            choices: roles.map(obj => obj.title)
+        }
+    ])
+    .then(answers => {
+        if (answers.empName != "Cancel") {
+            let employeeID = employees.find(obj => obj.name === answers.employeeName).id
+            let roleID = roles.find(obj => obj.title === answers.newRole).id
+            db.query("UPDATE employee SET role_id=? WHERE id=?", [roleID, employeeID]);
+            console.log("\x1b[32m", `${answers.employeeName} new role is ${answers.newRole}`);
+        }
+        startServer();
+    });
+};
 
 startServer();
