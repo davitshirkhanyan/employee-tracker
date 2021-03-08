@@ -363,12 +363,64 @@ async function updateEmployee() {
     ])
     .then(answers => {
         if (answers.empName != "Cancel") {
-            let employeeID = employees.find(obj => obj.name === answers.employeeName).id
-            let roleID = roles.find(obj => obj.title === answers.newRole).id
+            let employeeID = employees.find(obj => obj.name === answers.employeeName).id;
+            let roleID = roles.find(obj => obj.title === answers.newRole).id;
             db.query("UPDATE employee SET role_id=? WHERE id=?", [roleID, employeeID]);
             console.log("\x1b[32m", `${answers.employeeName} new role is ${answers.newRole}`);
         }
         startServer();
+    });
+};
+
+// Update a role
+async function updateRole() {
+    let roles = await db.query('SELECT id, title FROM role');
+    roles.push(
+        {
+            id: null,
+            title: "Cancel"
+        });
+    let departments = await db.query('SELECT id, name FROM department');
+
+    inquirer.prompt([
+        {
+            name: "roleName",
+            type: "list",
+            message: "Which role do you want to update?",
+            choices: roles.map(obj => obj.title)
+        }
+    ])
+    .then(response => {
+        if (response.roleName == "Cancel") {
+            startServer();
+            return;
+        }
+        inquirer.prompt([
+            {
+                name: "salary",
+                type: "input",
+                message: "Enter role's salary:",
+                validate: salaryInput => {
+                    if (!isNaN(salaryInput)) {
+                        return true;
+                    }
+                    return "Please enter a valid number.";
+                }
+            },
+            {
+                name: "roleDepartment",
+                type: "list",
+                message: "Choose the role's department:",
+                choices: departments.map(obj => obj.name)
+            }
+        ])
+        .then(answers => {
+            let departmentID = departments.find(obj => obj.name === answers.roleDepartment).id
+            let roleID = roles.find(obj => obj.title === response.roleName).id
+            db.query("UPDATE role SET title=?, salary=?, department_id=? WHERE id=?", [response.roleName, answers.salary, departmentID, roleID]);
+            console.log("\x1b[32m", `${response.roleName} was updated.`);
+            startServer();
+        });
     });
 };
 
