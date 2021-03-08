@@ -34,7 +34,8 @@ Run the following command and answer the prompted questions: node server
 
 ## Website
 
-![employee-tracker](https://user-images.githubusercontent.com/74809116/110287515-800e2080-7f9b-11eb-99e6-b46442e4cae2.gif)
+
+![employee-tracker](https://user-images.githubusercontent.com/74809116/110287988-3114bb00-7f9c-11eb-9f1d-b92a76212359.gif)
 
 ## Contribution
 Made by **Davit Shirkhanyan**
