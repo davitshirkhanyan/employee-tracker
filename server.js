@@ -57,7 +57,7 @@ const startServer = () => {
     .then(responses => {
         switch (responses.menu) {
             case 'View all Employees':
-                
+
                 break;
 
             case 'Edit Employee Info':
@@ -222,6 +222,46 @@ async function removeDepartment() {
 };
 
 // add a new role
+async function addRole() {
+    let departments = await db.query('SELECT id, name FROM department');
 
+    inquirer.prompt([
+        {
+            name: "roleName",
+            type: "input",
+            message: "Enter new role title(Required):",
+            validate: roleInput => {
+                if (roleInput) {
+                    return true;
+                } else {
+                    console.log("Please enter a new role title");
+                    return false;
+                }
+            }
+        },
+        {
+            name: "salary",
+            type: "input",
+            message: "Enter role's salary:",
+            validate: input => {
+                if (!isNaN(input)) {
+                    return true;
+                }
+                return "Please enter a valid number."
+            }
+        },
+        {
+            name: "roleDepartment",
+            type: "list",
+            message: "Choose the role's department:",
+            choices: departments.map(obj => obj.name)
+        }
+    ]).then(answers => {
+        let depID = departments.find(obj => obj.name === answers.roleDepartment).id
+        db.query("INSERT INTO role (title, salary, department_id) VALUES (?)", [[answers.roleName, answers.salary, depID]]);
+        console.log("\x1b[32m", `${answers.roleName} was added. Department: ${answers.roleDepartment}`);
+        startServer();
+    });
+};
 
 startServer();
