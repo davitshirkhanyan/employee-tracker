@@ -57,7 +57,7 @@ const startServer = () => {
     .then(responses => {
         switch (responses.menu) {
             case 'View all Employees':
-
+                
                 break;
 
             case 'Edit Employee Info':
@@ -87,7 +87,11 @@ const startServer = () => {
 async function addEmployee() {
     let positions = await db.query(`Select id, title FROM role`);
     let managers = await db.query(`SELECT id, CONCAT(first_name, ' ', last_name) AS Manager FROM employee`);
-    managers.unshift({ id: null, Manager: "None" });
+    managers.unshift(
+        {
+        id: null, 
+        Manager: "None" 
+    });
 
     inquirer.prompt([
         {
@@ -143,7 +147,8 @@ async function addEmployee() {
 // remove employee
 async function removeEmployee() {
     let employees = await db.query(`SELECT id, CONCAT(first_name, ' ', last_name) AS name FROM employee`);
-    employees.push({
+    employees.push(
+        {
         id: null,
         name: 'Cancel'
     });
@@ -189,5 +194,34 @@ async function addDepartment() {
         startServer();
     });
 };
+
+// remove a department
+async function removeDepartment() {
+    let departments = await db.query('SELECT id, name FROM department');
+    departments.push(
+        {
+        id: null,
+        name: "Cancel"
+    });
+
+    inquirer.prompt([
+        {
+            name: "departmentName",
+            type: "list",
+            message: "Which dapartment do you want to remove?",
+            choices: departments.map(obj => obj.name)
+        }
+    ]).then(response => {
+        if (response.departmentName != "Cancel") {
+            let removedDepartment = departments.find(obj => obj.name === response.departmentName);
+            db.query("DELETE FROM department WHERE id=?", removedDepartment.id);
+            console.log("\x1b[32m", `${response.departmentName} was removed.`);
+        }
+        startServer();
+    });
+};
+
+// add a new role
+
 
 startServer();
