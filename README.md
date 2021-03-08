@@ -1,4 +1,4 @@
-# employee-tracker
+# Employee Tracker
 [![Badge for GitHub](https://img.shields.io/github/languages/top/davitshirkhanyan/employee-tracker?style=flat&logo=appveyor)](https://davitshirkhanyan.github.io/employee-tracker)
 
 ## Description
