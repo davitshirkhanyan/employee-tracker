@@ -36,6 +36,7 @@ Run the following command and answer the prompted questions: node server
 
 
 ![employee-tracker](https://user-images.githubusercontent.com/74809116/110287988-3114bb00-7f9c-11eb-9f1d-b92a76212359.gif)
+https://user-images.githubusercontent.com/74809116/110288285-9d8fba00-7f9c-11eb-9b58-98d93103ee33.mp4
 
 ## Contribution
 Made by **Davit Shirkhanyan**
