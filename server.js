@@ -148,18 +148,44 @@ async function removeEmployee() {
         name: 'Cancel'
     });
 
-    inquirer.prompt({
+    inquirer.prompt([
+        {
         name: "employeeName",
         type: "list",
         message: "Which employee do you want to remove?",
         choices: employees.map(obj => obj.name)
-    })
+    }
+])
     .then(response => {
         if (response.employeeName != "Cancel") {
             let removedEmployee = employees.find(obj => obj.name === response.employeeName);
             db.query("DELETE FROM employee WHERE id=?", removedEmployee.id);
-            console.log("\x1b[32m", `${response.employeeName} was removed`);
+            console.log("\x1b[32m", `${response.employeeName} was removed from the database`);
         }
+        startServer();
+    });
+};
+
+// add a new department
+async function addDepartment() {
+    inquirer.prompt([
+        {
+            name: 'departmentName',
+            type: 'input',
+            message: 'Enter a new department name(Required):',
+            validate: departmentInput => {
+                if (departmentInput) {
+                    return true;
+                } else {
+                    console.log('Please enter a new department name');
+                    return false;
+                }
+            }
+        }
+    ])
+    .then(answers => {
+        db.query("INSERT INTO department (name) VALUES (?)", [answers.departmentName]);
+        console.log("\x1b[32m", `${answers.departmentName} was added to departments.`);
         startServer();
     });
 };
