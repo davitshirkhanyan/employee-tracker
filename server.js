@@ -132,10 +132,34 @@ async function addEmployee() {
     .then(answers => {
         let positionDetails = positions.find(obj => obj.title === answers.role);
         let manager = managers.find(obj => obj.Manager = answers.manager);
-        db.query(`INSERT ONTO employee (first_name, last_name, role_id, manager_id) VALUES (?), ${[
+        db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?), ${[
             [answers.firstName.trim(), answers.lastName.trim(), positionDetails.id, manager.id]
         ]}`);
         console.log("\x1b[32m", `${answers.firstName} was added to the employee database!`);
+        startServer();
+    });
+};
+
+// remove employee
+async function removeEmployee() {
+    let employees = await db.query(`SELECT id, CONCAT(first_name, ' ', last_name) AS name FROM employee`);
+    employees.push({
+        id: null,
+        name: 'Cancel'
+    });
+
+    inquirer.prompt({
+        name: "employeeName",
+        type: "list",
+        message: "Which employee do you want to remove?",
+        choices: employees.map(obj => obj.name)
+    })
+    .then(response => {
+        if (response.employeeName != "Cancel") {
+            let removedEmployee = employees.find(obj => obj.name === response.employeeName);
+            db.query("DELETE FROM employee WHERE id=?", removedEmployee.id);
+            console.log("\x1b[32m", `${response.employeeName} was removed`);
+        }
         startServer();
     });
 };
