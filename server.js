@@ -264,4 +264,30 @@ async function addRole() {
     });
 };
 
+// remove a role from the database
+async function removeRole() {
+    let roles = await db.query('SELECT id, title FROM role');
+    roles.push(
+        {
+            id: null, 
+            title: "Cancel"
+        });
+
+    inquirer.prompt([
+        {
+            name: "roleName",
+            type: "list",
+            message: "Which role do you want to remove?",
+            choices: roles.map(obj => obj.title)
+        }
+    ]).then(response => {
+        if (response.roleName != "Cancel") {
+            let removedRole = roles.find(obj => obj.title === response.roleName);
+            db.query("DELETE FROM role WHERE id=?", removedRole.id);
+            console.log("\x1b[32m", `${response.roleName} was removed.`);
+        }
+        startServer();
+    })
+};
+
 startServer();
