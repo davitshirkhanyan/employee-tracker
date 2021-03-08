@@ -36,7 +36,7 @@ const db = new Database({
     port: 3306,
     user: 'root',
     password: 'Dav1234',
-    databas: 'employee_db'
+    database: 'employee_db'
 });
 
 // add function to start the app
@@ -57,29 +57,59 @@ const startServer = () => {
     .then(responses => {
         switch (responses.menu) {
             case 'View all Employees':
-
+                showEmployees();
                 break;
 
             case 'Edit Employee Info':
-
+                editEmployeeOptions();
                 break;
 
             case 'View Departments':
-
+                showDepartments();
                 break;
 
             case 'Edit Departments':
-
+                editDepartmentOptions();
                 break;
 
             case 'View Roles':
-
+                showRoles();
                 break;
 
             case 'Edit Roles':
-
+                editRoleOptions();
                 break;
         }
+    });
+};
+
+// Builds complete employee table
+async function showEmployees() {
+    console.log(' ');
+    await db.query('SELECT e.id, e.first_name AS First_Name, e.last_name AS Last_Name, title AS Title, salary AS Salary, name AS Department, CONCAT(m.first_name, " ", m.last_name) AS Manager FROM employee e LEFT JOIN employee m ON e.manager_id = m.id INNER JOIN role r ON e.role_id = r.id INNER JOIN department d ON r.department_id = d.id', (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        startServer();
+    });
+};
+
+// Builds a table which shows existing departments
+async function showDepartments() {
+    console.log(' ');
+    await db.query('SELECT id, name AS department FROM department', (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        startServer();
+    });
+};
+
+// Builds a table which shows existing roles and their departments
+async function showRoles() {
+    console.log(' ');
+    await db.query('SELECT r.id, title, salary, name AS department FROM role r LEFT JOIN department d ON department_id = d.id', (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        startServer();
     });
 };
 
@@ -257,8 +287,8 @@ async function addRole() {
             choices: departments.map(obj => obj.name)
         }
     ]).then(answers => {
-        let depID = departments.find(obj => obj.name === answers.roleDepartment).id
-        db.query("INSERT INTO role (title, salary, department_id) VALUES (?)", [[answers.roleName, answers.salary, depID]]);
+        let departmentID = departments.find(obj => obj.name === answers.roleDepartment).id
+        db.query("INSERT INTO role (title, salary, department_id) VALUES (?)", [[answers.roleName, answers.salary, departmentID]]);
         console.log("\x1b[32m", `${answers.roleName} was added. Department: ${answers.roleDepartment}`);
         startServer();
     });
