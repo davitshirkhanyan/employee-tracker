@@ -424,4 +424,96 @@ async function updateRole() {
     });
 };
 
+// Options to make changes to employees specifically
+const editEmployeeOptions = () => {
+    inquirer.prompt({
+        name: "editChoice",
+        type: "list",
+        message: "What would you like to update?",
+        choices: [
+            "Add A New Employee",
+            "Change Employee Role",
+            "Change Employee Manager",
+            "Remove An Employee",
+            "Return To Main Menu"
+        ]
+    })
+    .then(response => {
+        switch (response.editChoice) {
+            case "Add A New Employee":
+                addEmployee();
+                break;
+            case "Change Employee Role":
+                updateEmployee();
+                break;
+            case "Change Employee Manager":
+                updateManager();
+                break;
+            case "Remove An Employee":
+                removeEmployee();
+                break;
+            case "Return To Main Menu":
+                startServer();
+                break;
+        }
+    });
+};
+
+// Options to make changes to roles
+const editRoleOptions = () => {
+    inquirer.prompt({
+        name: "editRoles",
+        type: "list",
+        message: "What would you like to update?",
+        choices: [
+            "Add A New Role",
+            "Update A Role",
+            "Remove A Role",
+            "Return To Main Menu"
+        ]
+    })
+    .then(responses => {
+        switch (responses.editRoles) {
+            case "Add A New Role":
+                addRole();
+                break;
+            case "Update A Role":
+                updateRole();
+                break;
+            case "Remove A Role":
+                removeRole();
+                break;
+            case "Return To Main Menu":
+                startServer();
+                break;
+        }
+    });
+};
+
+// Options to make changes to departments
+const editDepartmentOptions = () => {
+    inquirer.prompt({
+        name: "editDeparments",
+        type: "list",
+        message: "What would you like to update?",
+        choices: [
+            "Add A New Department",
+            "Remove A Department",
+            "Return To Main Menu"
+        ]
+    }).then(responses => {
+        switch (responses.editDeparments) {
+            case "Add A New Department":
+                addDepartment();
+                break;
+            case "Remove A Department":
+                removeDepartment();
+                break;
+            case "Return To Main Menu":
+                startServer();
+                break;
+        }
+    });
+};
+
 startServer();
