@@ -287,7 +287,56 @@ async function removeRole() {
             console.log("\x1b[32m", `${response.roleName} was removed.`);
         }
         startServer();
-    })
+    });
 };
+
+// Change the employee's manager.
+async function updateManager() {
+    let employees = await db.query('SELECT id, CONCAT(first_name, " ", last_name) AS name FROM employee');
+    employees.push(
+        {
+            id: null,
+            name: "Cancel"
+        });
+
+    inquirer.prompt([
+        {
+            name: "employeeName",
+            type: "list",
+            message: "Which employee do you want for?",
+            choices: employees.map(obj => obj.name)
+        }
+    ])
+    .then(employeeInfo => {
+        if (employeeInfo.employeeName == "Cancel") {
+            startServer();
+            return;
+        }
+        let managers = employees.filter(currEmployee => currEmployee.name != employeeInfo.employeeName);
+        for (i in managers) {
+            if (managers[i].name === "Cancel") {
+                managers[i].name = "None";
+            }
+        };
+
+        inquirer.prompt([
+            {
+                name: "managerName",
+                type: "list",
+                message: "Change the manager to:",
+                choices: managers.map(obj => obj.name)
+            }
+        ])
+        .then(managerInfo => {
+            let employeeID = employees.find(obj => obj.name === employeeInfo.employeeName).id;
+            let managerID = managers.find(obj => obj.name === managerInfo.managerName).id;
+            db.query("UPDATE employee SET manager_id=? WHERE id=?", [managerID, employeeID]);
+            console.log("\x1b[32m", `${employeeInfo.employeeName} now reports to ${managerInfo.managerName}`);
+            startServer();
+        });
+    });
+};
+
+
 
 startServer();
