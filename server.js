@@ -115,10 +115,10 @@ async function showRoles() {
 
 // add a new employee
 async function addEmployee() {
-    let positions = await db.query(`Select id, title FROM role`);
+    let positions = await db.query(`SELECT id, title FROM role`);
     let managers = await db.query(`SELECT id, CONCAT(first_name, ' ', last_name) AS Manager FROM employee`);
     managers.unshift(
-        {
+    {
         id: null, 
         Manager: "None" 
     });
@@ -127,12 +127,12 @@ async function addEmployee() {
         {
             name: 'firstName',
             type: 'input',
-            message: 'Enter Employee\'s first name(Required):',
+            message: 'Enter Employee\'s First name(Required):',
             validate: firstNameInput => {
                 if (firstNameInput) {
                     return true;
                 } else {
-                    console.log('Please enter Employee\'s first name');
+                    console.log('Please enter Employee\'s First name');
                     return false;
                 }
             }
@@ -140,35 +140,35 @@ async function addEmployee() {
         {
             name: 'lastName',
             type: 'input',
-            message: 'Enter Employee\'s last name(Required):',
+            message: 'Enter Employee\'s Last name(Required):',
             validate: lastNameInput => {
                 if (lastNameInput) {
                     return true;
                 } else {
-                    console.log('Please enter Employee\'s last name');
+                    console.log('Please enter Employee\'s Last name');
                     return false;
                 }
             }
         },
         {
             name: 'role',
-            type:'list',
-            message: 'Choose employee role',
+            type: 'list',
+            message: 'Choose employee role:',
             choices: positions.map(obj => obj.title)
         },
         {
             name: 'manager',
-            type:'list',
-            message: 'Choose employee\'s manager',
-            choices: positions.map(obj => obj.Manager)
+            type: 'list',
+            message: 'Choose employee\'s manager:',
+            choices: managers.map(obj => obj.Manager)
         }
     ])
     .then(answers => {
         let positionDetails = positions.find(obj => obj.title === answers.role);
         let manager = managers.find(obj => obj.Manager = answers.manager);
-        db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?), ${[
+        db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?)`, [
             [answers.firstName.trim(), answers.lastName.trim(), positionDetails.id, manager.id]
-        ]}`);
+        ]);
         console.log("\x1b[32m", `${answers.firstName} was added to the employee database!`);
         startServer();
     });
